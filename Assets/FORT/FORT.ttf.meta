@@ -1,0 +1,22 @@
+fileFormatVersion: 2
+guid: 93e6197261527f44ab025d56bca89ce8
+TrueTypeFontImporter:
+  externalObjects: {}
+  serializedVersion: 4
+  fontSize: 16
+  forceTextureCase: -2
+  characterSpacing: 0
+  characterPadding: 1
+  includeFontData: 1
+  fontNames:
+  - KouzanBrushFont
+  fallbackFontReferences:
+  - {fileID: 12800000, guid: 9e73d7a758fd7194b8a9511aa8b0bbfe, type: 3}
+  customCharacters: 
+  fontRenderingMode: 0
+  ascentCalculationMode: 1
+  useLegacyBoundsCalculation: 0
+  shouldRoundAdvanceValue: 1
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
