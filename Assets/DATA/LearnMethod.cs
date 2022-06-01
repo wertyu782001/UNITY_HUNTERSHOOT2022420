@@ -10,7 +10,7 @@ public class LearnMethod : MonoBehaviour
     {
         print("<color=#96FED1>顏色訊息</color>");
         print("<color=#FFC1E0>顏色訊息</color>");
-        print("<color=#7D7DFF>顏色訊息</color>");
+        print("<size=12><color=#7D7DFF>顏色訊息</color></size>");
 
     }        
 
