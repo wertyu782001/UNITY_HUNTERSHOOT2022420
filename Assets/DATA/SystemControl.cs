@@ -21,12 +21,23 @@ public class SystemControl : MonoBehaviour
         
         [Tooltip("彈珠可以發射的總數"), Header("總數"), Range(1, 100)]
         public int canshootMarbleTotal = 15;
+
+        [Tooltip("彈珠生成點"), Header("彈珠生成點")]
+        public Transform traSpawnPoint;
+
+        public Animator ani;
         #endregion
 
         #region 事件
+
+        private void Update()
+        {
+            shootMarble();
+        }
         #endregion
 
-        
+
+
 
         #region 方法
         /// <summary>
@@ -55,6 +66,25 @@ public class SystemControl : MonoBehaviour
         }
 
         #endregion
+
+
+        private void shootMarble()
+        {
+            // 放開 滑鼠左鍵 生成並發射彈珠
+            if (Input.GetKeyUp(KeyCode.Mouse0))
+            {
+                print("放開左鍵!");
+
+                // Object 類別可省略不寫
+                // 直接透過 Object 成員名稱使用
+                // 生成(彈珠) ;
+                Instantiate(marble, traSpawnPoint.position, Quaternion.identity
+                    );
+            }
+        }
     }
 
+    
+
+    
 }
