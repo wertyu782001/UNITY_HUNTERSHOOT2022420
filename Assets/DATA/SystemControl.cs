@@ -1,5 +1,5 @@
 using UnityEngine;
-
+using System.Collections;
 
 namespace GENEX
 {
@@ -25,6 +25,16 @@ public class SystemControl : MonoBehaviour
         [Tooltip("彈珠生成點"), Header("彈珠生成點")]
         public Transform traSpawnPoint;
 
+        [Tooltip("攻擊參數名稱"), Header("攻擊參數名稱")]
+        public string parAttack = "觸發攻擊";
+
+        [Tooltip("彈珠發射速度"), Header("彈珠發射速度"), Range(0, 5000)]
+        public float speedMarble = 1000;
+
+        [Tooltip("彈珠發射間隔"), Header("彈珠發射間隔"), Range(0, 2)]
+        public float intervalMarble = 0.5f;
+
+
         public Animator ani;
         #endregion
 
@@ -32,7 +42,14 @@ public class SystemControl : MonoBehaviour
 
         private void Update()
         {
-            shootMarble();
+            ShootMarble();
+        }
+
+        // Awake 在 Start 之前執行一次
+        private void Awake()
+        {
+            ani = GetComponent<Animator>();
+           
         }
         #endregion
 
@@ -48,13 +65,26 @@ public class SystemControl : MonoBehaviour
 
         }
 
-        /// <summary>
-        /// 發射彈珠、根據總數發射彈珠物件
-        /// </summary>
-        private void ShootMarble()
-        {
 
-        }
+        private IEnumerator SpwanMarble()
+        {
+            for (int i = 0; i < canshootMarbleTotal; i++)
+            {
+
+                ani.SetTrigger(parAttack);
+                // Object 類別可省略不寫
+                // 直接透過 Object 成員名稱使用
+                // 生成(彈珠) ;
+                // Quaternion.identity 零度角
+                GameObject tempMarble = Instantiate(marble, traSpawnPoint.position, Quaternion.identity);
+                //暫存彈珠 取得剛體元件 添加推力(角色.前方 * 速度)
+                // transform.forward 角色的前方
+                tempMarble.GetComponent<Rigidbody>().AddForce(transform.forward * speedMarble);
+
+                yield return new WaitForSeconds(intervalMarble);
+            }
+
+    }
 
 
         /// <summary>
@@ -68,18 +98,21 @@ public class SystemControl : MonoBehaviour
         #endregion
 
 
-        private void shootMarble()
+        private void ShootMarble()
         {
             // 放開 滑鼠左鍵 生成並發射彈珠
-            if (Input.GetKeyUp(KeyCode.Mouse0))
+            if (Input.GetKeyDown(KeyCode.Mouse0))
             {
-                print("放開左鍵!");
+                arrow.SetActive(true);
+            }    
+            // 放開 滑鼠左鍵 隱藏箭頭 生成並發射彈珠
+            else if (Input.GetKeyUp(KeyCode.Mouse0))
+            {
+                // print("放開左鍵!");
+                arrow.SetActive(false);
+                StartCoroutine(SpwanMarble());
 
-                // Object 類別可省略不寫
-                // 直接透過 Object 成員名稱使用
-                // 生成(彈珠) ;
-                Instantiate(marble, traSpawnPoint.position, Quaternion.identity
-                    );
+               
             }
         }
     }
