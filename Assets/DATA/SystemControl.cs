@@ -1,5 +1,6 @@
 using UnityEngine;
 using System.Collections;
+using TMPro;
 
 namespace GENEX
 {
@@ -34,22 +35,45 @@ public class SystemControl : MonoBehaviour
         [Tooltip("彈珠發射間隔"), Header("彈珠發射間隔"), Range(0, 2)]
         public float intervalMarble = 0.5f;
 
+        [Header("彈珠數量")]
+        public TextMeshProUGUI textMarbleCount;
+
+        private bool canShootMarble = true;
+
+        private Camera cameraMouse;
+
+        private Transform traMouse;
 
         public Animator ani;
+        
         #endregion
 
         #region 事件
 
+       
+
+
+
         private void Update()
         {
             ShootMarble();
+            TurnCharactor();
         }
 
         // Awake 在 Start 之前執行一次
         private void Awake()
         {
             ani = GetComponent<Animator>();
-           
+
+
+            textMarbleCount.text = "x" + canshootMarbleTotal;
+
+            cameraMouse = GameObject.Find("轉換滑鼠用鏡頭").GetComponent<Camera>();
+
+            //traMouse = GameObject.Find("座標轉換實體物件").GetComponent<transform>();
+            traMouse = GameObject.Find("座標轉換後實體物件").transform;
+
+
         }
         #endregion
 
@@ -62,7 +86,17 @@ public class SystemControl : MonoBehaviour
         /// </summary>
         private void TurnCharactor()
         {
-
+            // 1.滑鼠座標
+            Vector3 posMouse = Input.mousePosition;
+            print("<color=yellow>滑鼠座標:" + posMouse + "</color>");
+            // 跟攝影機的 Y 軸一樣
+            posMouse.z = 25;
+            // 2.滑鼠座標轉為世界座標
+            Vector3 pos = cameraMouse.ScreenToWorldPoint(posMouse);
+            // 將轉換完的世界座標
+            pos.y = 0.5f;
+            // 3.史界座標給實體物件
+            traMouse.position = pos;
         }
 
 
@@ -70,6 +104,8 @@ public class SystemControl : MonoBehaviour
         {
             for (int i = 0; i < canshootMarbleTotal; i++)
             {
+                int total = canshootMarbleTotal;
+
 
                 ani.SetTrigger(parAttack);
                 // Object 類別可省略不寫
@@ -81,6 +117,9 @@ public class SystemControl : MonoBehaviour
                 // transform.forward 角色的前方
                 tempMarble.GetComponent<Rigidbody>().AddForce(transform.forward * speedMarble);
 
+                total--;
+                if (total > 0) textMarbleCount.text = "X" + total;
+                else if (total == 0) textMarbleCount.text = "";
                 yield return new WaitForSeconds(intervalMarble);
             }
 
@@ -100,6 +139,9 @@ public class SystemControl : MonoBehaviour
 
         private void ShootMarble()
         {
+            // 如果 不能發射彈珠 就跳出
+            if (!canShootMarble) return;
+
             // 放開 滑鼠左鍵 生成並發射彈珠
             if (Input.GetKeyDown(KeyCode.Mouse0))
             {
@@ -108,6 +150,9 @@ public class SystemControl : MonoBehaviour
             // 放開 滑鼠左鍵 隱藏箭頭 生成並發射彈珠
             else if (Input.GetKeyUp(KeyCode.Mouse0))
             {
+                // 不能發射彈珠
+                canShootMarble = false;
+
                 // print("放開左鍵!");
                 arrow.SetActive(false);
                 StartCoroutine(SpwanMarble());
