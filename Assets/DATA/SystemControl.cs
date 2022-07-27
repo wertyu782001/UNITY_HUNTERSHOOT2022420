@@ -73,6 +73,8 @@ public class SystemControl : MonoBehaviour
             //traMouse = GameObject.Find("座標轉換實體物件").GetComponent<transform>();
             traMouse = GameObject.Find("座標轉換後實體物件").transform;
 
+            //物理 忽略圖層碰撞(圖層1，圖層2)
+            Physics.IgnoreLayerCollision(3,3);
 
         }
         #endregion
