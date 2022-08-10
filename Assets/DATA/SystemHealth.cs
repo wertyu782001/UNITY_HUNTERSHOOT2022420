@@ -15,9 +15,11 @@ namespace GENEX
         private TextMeshProUGUI textHp;
         [SerializeField, Header("怪物資料")]
         private DataEnemy dataEnemy;
-
+        [SerializeField, Header("敵人動畫控制器")]
+        private Animator aniEneny;
 
         private float hp;
+        private string parDamage = "觸發受傷";
 
         private void Awake()
         {
@@ -38,9 +40,15 @@ namespace GENEX
         }
         private void GetDamage()
         {
-            hp -= 50;
+            float getDamage = 50;
+            hp -= getDamage;
             textHp.text = hp.ToString();
             impHp.fillAmount = hp / dataEnemy.hp;
+            aniEneny.SetTrigger(parDamage);
+
+            Vector3 pos = transform.position + Vector3.up;
+            SystemDamage tempDamage = Instantiate(goDamge, pos, Quaternion.Euler(45, 0, 0)).GetComponent<SystemDamage>();
+            tempDamage.damage = getDamage;
 
             if (hp <= 0) Dead();
         }    

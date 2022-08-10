@@ -88,6 +88,7 @@ public class SystemControl : MonoBehaviour
         /// </summary>
         private void TurnCharactor()
         {
+            if (!canShootMarble) return;
             // 1.滑鼠座標
             Vector3 posMouse = Input.mousePosition;
             print("<color=yellow>滑鼠座標:" + posMouse + "</color>");
@@ -99,6 +100,8 @@ public class SystemControl : MonoBehaviour
             pos.y = 0.5f;
             // 3.史界座標給實體物件
             traMouse.position = pos;
+
+            transform.LookAt(traMouse);
         }
 
 
