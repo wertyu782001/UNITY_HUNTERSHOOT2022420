@@ -11,6 +11,10 @@ namespace GENEX
         public float hp;
         [Header("傷害"), Range(0, 10000)]
         public float damage;
+        [Header("掉落金幣預製物")]
+        public GameObject goCoin;
+        [Header("掉落金幣預製物")]
+        public Vector2Int v2CoinRange;
     }
 
 }

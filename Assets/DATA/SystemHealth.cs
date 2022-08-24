@@ -18,6 +18,7 @@ namespace GENEX
         [SerializeField, Header("敵人動畫控制器")]
         private Animator aniEneny;
 
+        private SystemSpawn systemSpawn;
         private float hp;
         private string parDamage = "觸發受傷";
 
@@ -56,7 +57,29 @@ namespace GENEX
         // 死亡
         private void Dead()
         {
-            print("死亡");
+            //print("死亡");
+            Destroy(gameObject);
+            systemSpawn.totalCountEnemyLive--;
+            //print(< "color=red>怪物數量:" + totalCountEnemyLive + "</color>");
+            DropCoin();
+        }
+
+
+        /// <summary>
+        /// 掉落金幣
+        /// </summary>
+       private void DropCoin()
+        {
+            int range = Random.Range(dataEnemy.v2CoinRange.x, dataEnemy.v2CoinRange.y);
+            
+            for(int i = 0;i <range; i++)
+            {
+                Instantiate(
+                    dataEnemy.goCoin,
+                    transform.position + new Vector3(0, 2, 0),
+                    Quaternion.Euler(90, 180, 0)) ;
+            }
+        
         }
     }
 }
