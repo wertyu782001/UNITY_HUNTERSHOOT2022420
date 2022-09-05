@@ -12,13 +12,29 @@ namespace GENEX
         /// <summary>
         /// 寄
         /// </summary>
-        public UnityEvent onTurnEnemy; 
+        public UnityEvent onTurnEnemy;
+        private int countMarbleEat;
 
+        private bool canSpawn = true;
         private SystemControl systemControl;
         private SystemSpawn systemSpawn;
         private RecycleArea recycleArea;
+
+        public void MoveEndSpawnEnemy()
+        {
+            if (!canSpawn) return;
+            canSpawn = false;
+            systemSpawn.SpawnRandomEnemy();
+            Invoke("PlayerTurn", 1);
         
-        
+        }
+        /// <summary>
+        /// 紆痌计秖患糤
+        /// </summary>
+        public void MarbleEat()
+        {
+            countMarbleEat++;
+        }
 
         /// <summary>
         /// 紆痌羆计
@@ -34,8 +50,10 @@ namespace GENEX
         /// </summary>
         private int totalRecycleMarble;
 
+		
 
-        private void Awake() 
+
+		private void Awake() 
         {
             systemControl = GameObject.Find("ガ狶").GetComponent<SystemControl>();
             systemSpawn = GameObject.Find("ネΘ┣╰参").GetComponent<SystemSpawn>();
@@ -61,6 +79,17 @@ namespace GENEX
                 onTurnEnemy.Invoke();
             }
 
+        }
+        private void PlayerTurn()
+        {
+            systemControl.canShootMarble = true;
+            canSpawn = true;
+            totalRecycleMarble = 0;
+
+            #region 紆痌计秖矪瞶
+            systemControl.canshootMarbleTotal += countMarbleEat;
+            countMarbleEat = 0;
+            #endregion
         }
 
     }

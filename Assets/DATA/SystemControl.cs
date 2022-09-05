@@ -38,7 +38,7 @@ public class SystemControl : MonoBehaviour
         [Header("¼u¯]¼Æ¶q")]
         public TextMeshProUGUI textMarbleCount;
 
-        private bool canShootMarble = true;
+        public bool canShootMarble = true;
 
         private Camera cameraMouse;
 

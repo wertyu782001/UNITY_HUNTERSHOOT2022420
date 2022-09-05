@@ -24,18 +24,18 @@ namespace GENEX
 
         private void Awake()
         {
-            SpawnRadomEnemy();
+            SpawnRandomEnemy();
         }
         /// <summary>
         /// 怪物生成系統
         /// </summary>
-        private int totalCountEnemyLive;
+        public int totalCountEnemyLive;
 
         #region 方法
         /// <summary>
         /// 生成隨機敵人
         /// </summary>
-        private void SpawnRadomEnemy()
+       public void SpawnRandomEnemy()
         {
             int min = 2;
             int max = traSecondPlace.Length;

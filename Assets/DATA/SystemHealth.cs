@@ -17,28 +17,62 @@ namespace GENEX
         private DataEnemy dataEnemy;
         [SerializeField, Header("敵人動畫控制器")]
         private Animator aniEneny;
+        [SerializeField, Header("碰到會受傷的物件名稱")]
+        private string nameHuntObject;
+        [Header("玩家接收傷害區域")]
+        [SerializeField] private Vector3 v3DamageSize;
+        [SerializeField] private Vector3 v3DamagePosition;
+        [SerializeField, Header("接收傷害的圖層")]
+        private LayerMask layerDamage;
 
         private SystemSpawn systemSpawn;
-        private float hp;
+
+		private void OnDrawGizmos()
+		{
+            Gizmos.color = new Color(0.2f, 1, 0.2f, 0.5f);
+            Gizmos.DrawCube(v3DamagePosition, v3DamageSize);
+		}
+		private float hp;
         private string parDamage = "觸發受傷";
+
 
         private void Awake()
         {
             hp = dataEnemy.hp;
         }
 
-        //碰撞事件
-        // 1. 兩個物件必須有一個帶有 Rigidbody
-        // 2. 兩個物件必須有碰撞器 Collider
-        // 3. 是否有勾選 Is Trigger
-        // 3-1. 兩者都沒有勾選 Is Trigger  使用 OnCollision
-        private void OnCollisionEnter(Collision collision)
-        {
-            // print("碰撞到的物件: " + collision.gameObject);
+		private void Update()
+		{
+            CheckObjectInDamageArea();
+		}
 
-            GetDamage();
+		//碰撞事件
+		// 1. 兩個物件必須有一個帶有 Rigidbody
+		// 2. 兩個物件必須有碰撞器 Collider
+		// 3. 是否有勾選 Is Trigger
+		// 3-1. 兩者都沒有勾選 Is Trigger  使用 OnCollision
+		private void OnCollisionEnter(Collision collision)
+        {
+            //print("碰撞到的物件: " + collision.gameObject);
+            if (collision.gameObject.name.Contains(nameHuntObject)) GetDamage();
+
 
         }
+
+        private void CheckObjectInDamageArea()
+        {
+            Collider[] hits = Physics.OverlapBox(
+                v3DamagePosition, v3DamageSize / 2,
+                Quaternion.identity, layerDamage);
+
+            if (hits.Length > 0)
+            {
+                GetDamage();
+                Destroy(hits[0].gameObject);
+              //  print("進到受傷區域的物件:" + hits[0]);
+            }
+        }
+
         private void GetDamage()
         {
             float getDamage = 50;
