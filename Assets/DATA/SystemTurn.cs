@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityEngine.Events;
+using TMPro;
 
 namespace GENEX
 {
@@ -14,6 +15,15 @@ namespace GENEX
         /// </summary>
         public UnityEvent onTurnEnemy;
         private int countMarbleEat;
+        /// <summary>
+        /// 層數數字
+        /// </summary>
+        private TextMeshProUGUI textFloorCount;
+        private int countFloor = 1;
+
+        [SerializeField, Header("當前層數最大值"), Range(1, 100)]
+        private int countFloorMax = 50;
+        private bool isFloorCountMax;
 
         private bool canSpawn = true;
         private SystemControl systemControl;
@@ -23,6 +33,11 @@ namespace GENEX
         public void MoveEndSpawnEnemy()
         {
             if (!canSpawn) return;
+            if (!isFloorCountMax)
+            {
+                canSpawn = false;
+                systemSpawn.SpawnRandomEnemy();
+            }
             canSpawn = false;
             systemSpawn.SpawnRandomEnemy();
             Invoke("PlayerTurn", 1);
@@ -58,9 +73,12 @@ namespace GENEX
             systemControl = GameObject.Find("哥布林").GetComponent<SystemControl>();
             systemSpawn = GameObject.Find("生成怪物系統").GetComponent<SystemSpawn>();
             recycleArea = GameObject.Find("回收區域").GetComponent<RecycleArea>();
+            textFloorCount = GameObject.Find("層數數字").GetComponent<TextMeshProUGUI>();
 
             recycleArea.onRecycle.AddListener(RecycleMarble);
         }
+        [SerializeField, Header("沒有移動物件並且延遲生成的時間"), Range(0, 3)]
+        private float noMoveObjectAnDelaySpawn = 1;
         
 
         /// <summary>
@@ -77,6 +95,12 @@ namespace GENEX
             {
                 print("回收完畢，換敵人回合");
                 onTurnEnemy.Invoke();
+
+                // 如果沒有敵人就移動結束並生成敵人與彈珠
+                if (FindObjectsOfType<SystemMove>().Length == 0)
+                {
+                    Invoke("MoveEndSpawnEnemy", noMoveObjectAnDelaySpawn);
+                }
             }
 
         }
@@ -90,6 +114,24 @@ namespace GENEX
             systemControl.canshootMarbleTotal += countMarbleEat;
             countMarbleEat = 0;
             #endregion
+
+            if (countFloor < countFloorMax)
+            {
+                countFloor++;
+                textFloorCount.text = countFloor.ToString();
+            }
+            if (countFloor == countFloorMax) isFloorCountMax = true;
+
+            if (isFloorCountMax)
+            {
+                if (FindObjectsOfType<SystemMove>().Length == 0)
+                {
+                    print("關卡挑戰成功");
+                }
+            }
+
+            countFloor++;
+            textFloorCount.text = countFloor.ToString();
         }
 
     }

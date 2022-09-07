@@ -54,7 +54,9 @@ namespace GENEX
 		private void OnCollisionEnter(Collision collision)
         {
             //print("碰撞到的物件: " + collision.gameObject);
-            if (collision.gameObject.name.Contains(nameHuntObject)) GetDamage();
+            if (collision.gameObject.name.Contains(nameHuntObject)) 
+                GetDamage(collision.gameObject.GetComponent<SystemAttack>().valueAttack);
+              
 
 
         }
@@ -67,15 +69,15 @@ namespace GENEX
 
             if (hits.Length > 0)
             {
-                GetDamage();
+                GetDamage(hits[0].GetComponent<SystemAttack>().valueAttack);
                 Destroy(hits[0].gameObject);
               //  print("進到受傷區域的物件:" + hits[0]);
             }
         }
 
-        private void GetDamage()
+        private void GetDamage(float getDamage)
         {
-            float getDamage = 50;
+            
             hp -= getDamage;
             textHp.text = hp.ToString();
             impHp.fillAmount = hp / dataEnemy.hp;
